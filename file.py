@@ -1,1 +1,1 @@
-print(len(""))
+print(len("---------"))
