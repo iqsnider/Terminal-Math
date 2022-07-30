@@ -12,7 +12,7 @@
 
 void sine_frame(int frame_height, int frame_width, float iter){
 
-    for (int i = 0; i < frame_height; i++){
+    for (int i = 0; i <= frame_height; i++){
         for (float j = 0; j <= frame_width; j++){
 
             // start interpolation maths
@@ -30,11 +30,11 @@ void sine_frame(int frame_height, int frame_width, float iter){
 
             // plot the sine wave
             if (i == yp){
-                putchar('.');
+                putchar(' ');
             }
 
             else{
-                putchar(' ');
+                putchar('#');
             }
 
         }
@@ -61,8 +61,8 @@ int main(){
     //     printf("%s%d%s",next_frame, frame_height, "A");
     // }
 
-    int frame_height = 50;
-    int frame_width = 100;
+    int frame_height = 20;
+    int frame_width = 40;
 
     // float y = sin(1);
 
@@ -72,12 +72,12 @@ int main(){
 
 
     // sine_frame(frame_height,frame_width,1);
-    for (float i = 0; i < 100; i++){
+    for (float i = 0; i < 500; i++){
 
         sine_frame(frame_height,frame_width,i);
 
-        usleep(60000);
-        printf("%s%d%s","\x1b[",frame_height,"A");
+        usleep(100000);
+        printf("%s%d%s","\x1b[",frame_height+1,"A");
     }
     
 }
