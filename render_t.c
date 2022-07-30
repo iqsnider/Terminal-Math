@@ -9,13 +9,13 @@
 
 #define PI 3.14159265
 
-void trig_frame(int frame_height, int frame_width, float iter,int amplitude){
+void trig_frame(int frame_height, int frame_width, int amplitude, int iter){
 
     for (int i = 0; i <= frame_height; i++){
         for (int j = 0; j <= frame_width; j++){
 
             // start interpolation maths
-            float rel_x = ((j-iter)/frame_width)*2*PI;
+            float rel_x = (((float)j-iter)/frame_width)*2*PI;
 
             // print values for debugging
             // printf("%f%s",rel_x,"\n");
@@ -31,8 +31,6 @@ void trig_frame(int frame_height, int frame_width, float iter,int amplitude){
             // end interpolation maths
 
             // plot the sine wave
-
-            
             // place characters (ez for 2d)
             // makes an x and y axis
             if (i == yp){
@@ -86,11 +84,11 @@ int main(){
 
 
     // sine_frame(frame_height,frame_width,1);
-    float k = 0;
+    int k = 0;
     int amplitude = 6;
     for (;;){
 
-        trig_frame(frame_height,frame_width,k, amplitude);
+        trig_frame(frame_height, frame_width, amplitude, k);
 
         usleep(50000);
         printf("%s%d%s","\x1b[",frame_height+1,"A");
