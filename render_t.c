@@ -1,18 +1,18 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <stdint.h>
 
 #include <unistd.h>
 #include <math.h>
 
+//TODO fix data types and type conversions
 //TODO args parser in C
 
 #define PI 3.14159265
 
-void sine_frame(int frame_height, int frame_width, float iter){
+void trig_frame(int frame_height, int frame_width, float iter,int amplitude){
 
     for (int i = 0; i <= frame_height; i++){
-        for (float j = 0; j <= frame_width; j++){
+        for (int j = 0; j <= frame_width; j++){
 
             // start interpolation maths
             float rel_x = ((j-iter)/frame_width)*2*PI;
@@ -23,20 +23,33 @@ void sine_frame(int frame_height, int frame_width, float iter){
             float y = sin(rel_x);
 
             // find position on grid
-            int xp = j;
-            int yp =  round(frame_height/2 - y*frame_height/2);
+            // int yp =  round(frame_height/2 - y*frame_height/2);
+            int yp =  round(frame_height/2 - y*amplitude);
 
             // print values for debugging
             // printf("%d%s%d%s",xp," ",yp,"\n");
             // end interpolation maths
 
             // plot the sine wave
+
+            
+            // place characters (ez for 2d)
+            // makes an x and y axis
             if (i == yp){
-                putchar(' ');
+                putchar('#');
+            }
+
+            else if (i == frame_height/2){
+                putchar('-');
             }
 
             else{
-                putchar('#');
+                if (j == frame_width/2){
+                    putchar('|');
+                }
+                else{
+                    putchar(' ');
+                }
             }
         }
         putchar('\n');
@@ -62,8 +75,8 @@ int main(){
     //     printf("%s%d%s",next_frame, frame_height, "A");
     // }
 
-    int frame_height = 40;
-    int frame_width = 80;
+    int frame_height = 30;
+    int frame_width = 60;
 
     // float y = sin(1);
 
@@ -74,11 +87,12 @@ int main(){
 
     // sine_frame(frame_height,frame_width,1);
     float k = 0;
+    int amplitude = 6;
     for (;;){
 
-        sine_frame(frame_height,frame_width,k);
+        trig_frame(frame_height,frame_width,k, amplitude);
 
-        usleep(10000);
+        usleep(50000);
         printf("%s%d%s","\x1b[",frame_height+1,"A");
         k++;
     }
