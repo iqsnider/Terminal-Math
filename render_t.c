@@ -9,7 +9,7 @@
 
 #define PI 3.14159265
 
-void render_frame(int frame_height, int frame_width, int iter){
+void render_frame(int frame_height, int frame_width, int iter, int propogation){
 
     for (int i = 0; i <= frame_height; i++){
         for (int j = 0; j <= frame_width; j++){
@@ -32,9 +32,17 @@ void render_frame(int frame_height, int frame_width, int iter){
 
             // define origin as center of graph
             float origin = (float) graph_length/2;
-            // float x = (((float)j)/frame_width)*graph_length - origin;
+
+            float x = 0;
             // if you want propogation:
-            float x = (((float)j-iter)/frame_width)*graph_length - origin;
+            if (propogation == 1){
+                x = (((float)j-iter)/frame_width)*graph_length - origin;
+            }
+
+            // no propogation
+            if (propogation == 0){
+                x = (((float)j)/frame_width)*graph_length - origin;
+            }
 
             // print values for debugging
             // printf("%f%s",rel_x,"\n");
@@ -51,8 +59,7 @@ void render_frame(int frame_height, int frame_width, int iter){
             // end interpolation maths
 
             // plot the sine wave
-            // place characters (ez for 2d)
-            // makes an x and y axis
+            // places characters and makes axes (ez for 2d)
             if (i == yp){
                 putchar('#');
             }
@@ -78,40 +85,17 @@ int main(){
     
     putchar('\n');
 
-    // char next_frame[] = "\x1b[";
-    // int frame_height = 10;
-    // for (int k = 0; k <70; k++){
-    //     for (int j = 0; j < 10; j++){
-    //         for (int i = 0; i < 10; i++){
-    //             putchar(k+'0');
-    //         }
-    //         putchar('\n');
-            
-    //     }
-    //     usleep(60000);
-
-    //     printf("%s%d%s",next_frame, frame_height, "A");
-    // }
 
     int frame_height = 30;
     int frame_width = 60;
+    int propogate = 1;
 
-    // float y = sin(1);
+    for (int i = 0;;i++){
 
-    // int yp = (int) (frame_height/2 + y*frame_height/2);
-
-    // printf("%d",yp);
-
-
-    // sine_frame(frame_height,frame_width,1);
-    int k = 0;
-    for (;;){
-
-        render_frame(frame_height, frame_width, k);
+        render_frame(frame_height, frame_width, i, propogate);
 
         usleep(50000);
         printf("%s%d%s","\x1b[",frame_height+1,"A");
-        k++;
     }
     
 }
