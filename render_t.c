@@ -61,7 +61,7 @@ int main(){
     //     printf("%s%d%s",next_frame, frame_height, "A");
     // }
 
-    int frame_height = 20;
+    int frame_height = 10;
     int frame_width = 40;
 
     // float y = sin(1);
@@ -72,12 +72,14 @@ int main(){
 
 
     // sine_frame(frame_height,frame_width,1);
-    for (float i = 0; i < 500; i++){
+    float k = 0;
+    for (;;){
 
-        sine_frame(frame_height,frame_width,i);
+        sine_frame(frame_height,frame_width,k);
 
         usleep(100000);
         printf("%s%d%s","\x1b[",frame_height+1,"A");
+        k++;
     }
     
 }
