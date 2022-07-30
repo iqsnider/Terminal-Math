@@ -9,22 +9,42 @@
 
 #define PI 3.14159265
 
-void trig_frame(int frame_height, int frame_width, int amplitude, int iter){
+void render_frame(int frame_height, int frame_width, int iter){
 
     for (int i = 0; i <= frame_height; i++){
         for (int j = 0; j <= frame_width; j++){
 
             // start interpolation maths
-            float rel_x = (((float)j-iter)/frame_width)*2*PI;
+
+            // define x scale (basically: how much zoom? set to frame sizes for 1x zoom):
+            int x_scale = frame_width;
+            // define y scale:
+            int y_scale = frame_height;
+
+            // define graph tick mark scale:
+            float xtick_scale = 2*PI;
+            float ytick_scale = 5;
+
+
+            // defines calcuation scales
+            float graph_height = frame_height/(y_scale/(ytick_scale));
+            float graph_length = frame_width/(x_scale/(xtick_scale));
+
+            // define origin as center of graph
+            float origin = (float) graph_length/2;
+            // float x = (((float)j)/frame_width)*graph_length - origin;
+            // if you want propogation:
+            float x = (((float)j-iter)/frame_width)*graph_length - origin;
 
             // print values for debugging
             // printf("%f%s",rel_x,"\n");
 
-            float y = sin(rel_x);
+            float y = sin(x);
+            // float y = x*x;
 
             // find position on grid
-            // int yp =  round(frame_height/2 - y*frame_height/2);
-            int yp =  round(frame_height/2 - y*amplitude);
+            // int yp =  round(frame_height/2 - y*amplitude);
+            int yp =  round(frame_height/2 - (y/graph_height)*frame_height);
 
             // print values for debugging
             // printf("%d%s%d%s",xp," ",yp,"\n");
@@ -85,10 +105,9 @@ int main(){
 
     // sine_frame(frame_height,frame_width,1);
     int k = 0;
-    int amplitude = 6;
     for (;;){
 
-        trig_frame(frame_height, frame_width, amplitude, k);
+        render_frame(frame_height, frame_width, k);
 
         usleep(50000);
         printf("%s%d%s","\x1b[",frame_height+1,"A");
