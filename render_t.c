@@ -1,15 +1,15 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h> 
 
 #include <unistd.h>
 #include <math.h>
 
-//TODO fix data types and type conversions
 //TODO args parser in C
 
 #define PI 3.14159265
 
-void render_frame(int frame_height, int frame_width, int iter, int propogation){
+void render_frame(int frame_height, int frame_width, int iter, bool propogation){
 
     for (int i = 0; i <= frame_height; i++){
         for (int j = 0; j <= frame_width; j++){
@@ -22,7 +22,7 @@ void render_frame(int frame_height, int frame_width, int iter, int propogation){
             int y_scale = frame_height;
 
             // define graph tick mark scale:
-            float xtick_scale = 2*PI;
+            float xtick_scale = 8*PI;
             float ytick_scale = 5;
 
 
@@ -33,21 +33,21 @@ void render_frame(int frame_height, int frame_width, int iter, int propogation){
             // define origin as center of graph
             float origin = (float) graph_length/2;
 
-            float x = 0;
+            float x;
             // if you want propogation:
-            if (propogation == 1){
+            if (propogation == true){
                 x = (((float)j-iter)/frame_width)*graph_length - origin;
             }
 
             // no propogation
-            if (propogation == 0){
+            if (propogation == false){
                 x = (((float)j)/frame_width)*graph_length - origin;
             }
 
             // print values for debugging
             // printf("%f%s",rel_x,"\n");
 
-            float y = sin(x);
+            float y = sin(x) + sin(x/2) + sin(x/3);
             // float y = x*x;
 
             // find position on grid
@@ -86,9 +86,9 @@ int main(){
     putchar('\n');
 
 
-    int frame_height = 30;
-    int frame_width = 60;
-    int propogate = 1;
+    int frame_height = 40;
+    int frame_width = 100;
+    bool propogate = true;
 
     for (int i = 0;;i++){
 
