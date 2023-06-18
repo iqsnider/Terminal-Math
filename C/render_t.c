@@ -49,8 +49,8 @@ void render_frame(int frame_height, int frame_width, int iter, bool propogation)
             // float y = x*x;
 
             // find position on grid
-            // int yp =  round(frame_height/2 - y*amplitude);
-            int yp =  round(frame_height/2 - (y/graph_height)*frame_height);
+            // int yp = round(frame_height/2 - y*amplitude);
+            int yp = round(frame_height/2 - (y/graph_height)*frame_height);
 
             // print values for debugging
             // printf("%d%s%d%s",xp," ",yp,"\n");
