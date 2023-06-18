@@ -7,8 +7,6 @@
 
 //TODO args parser in C
 
-#define PI 3.14159265
-
 void render_frame(int frame_height, int frame_width, int iter, bool propogation){
 
     for (int i = 0; i <= frame_height; i++){
@@ -22,7 +20,7 @@ void render_frame(int frame_height, int frame_width, int iter, bool propogation)
             int y_scale = frame_height;
 
             // define graph tick mark scale:
-            float xtick_scale = 8*PI;
+            float xtick_scale = 2*M_PI;
             float ytick_scale = 5;
 
 
@@ -47,7 +45,7 @@ void render_frame(int frame_height, int frame_width, int iter, bool propogation)
             // print values for debugging
             // printf("%f%s",rel_x,"\n");
 
-            float y = sin(x) + sin(x/2) + sin(x/3);
+            float y = sin(x);
             // float y = x*x;
 
             // find position on grid
