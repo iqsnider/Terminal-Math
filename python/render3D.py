@@ -10,6 +10,8 @@ TODO:
 4. luminance calculation
 5. runtime optimizations (it's real bad, gamers)
 6. Clean code
+7. Write a program for argument parsing a 3D function into a parametric system of equations for x, y, and z
+8. Make a new github repo called 3D graphing calculator
 '''
 
 def decimal_range(start, stop, increment):
@@ -57,7 +59,7 @@ def make_rotation(phi, thta, psi):
 
 
 # render the graph in the terminal
-def render_frame(frame_height, frame_width, rotation_m, show_axes):
+def render_frame(frame_height, frame_width, rotation_m, step, show_axes):
 
     # define x scale (basically: how much zoom? set to frame sizes for 1x zoom):
     e_1_scale = frame_width
@@ -159,10 +161,10 @@ def render_frame(frame_height, frame_width, rotation_m, show_axes):
 
     # -------> Torus
     # R1 = 10
-    # R2 = 1
+    # R2 = 6
 
-    # for theta in decimal_range(0, 2*np.pi, 0.02):
-    #     for phi in decimal_range(0, 2*np.pi, 0.02):
+    # for theta in decimal_range(0, 2*np.pi, step):
+    #     for phi in decimal_range(0, 2*np.pi, step + np.pi/6):
             
     #         x = (R1 + R2*m.cos(phi))*m.cos(theta)
     #         y = (R1 + R2*m.cos(phi))*m.sin(theta)
@@ -171,7 +173,6 @@ def render_frame(frame_height, frame_width, rotation_m, show_axes):
     #         v = np.array([x,y,z])
     #         r = np.dot(rotation_m, v)
 
-
     #         rpos = [round(frame_width/2 + r[1]/graph_width * frame_width),
     #             round(frame_height/2 - r[2]/graph_height * frame_height)]
 
@@ -179,9 +180,9 @@ def render_frame(frame_height, frame_width, rotation_m, show_axes):
 
 
     # --------> cube
-    # for t_x in decimal_range(-4, 4, 0.2):
-    #     for t_y in decimal_range(-4,4, 0.2):
-    #         for t_z in decimal_range(-4,4,0.2):
+    # for t_x in decimal_range(-7, 7, step):
+    #     for t_y in decimal_range(-7,7, step):
+    #         for t_z in decimal_range(-7,7,step):
             
     #             x = t_x
     #             y = t_y
@@ -213,26 +214,35 @@ def render_frame(frame_height, frame_width, rotation_m, show_axes):
 
     #             output[rpos[1]][rpos[0]] = "#"
 
+    # ------> just some function
+    for t_1 in decimal_range(-10, 10, 0.2):
+        for t_2 in decimal_range(-15, 15, 0.2):
+            x = t_1*t_1/3
+            y = t_2 
+            z = t_1
+
+            v = np.array([x,y,z])
+            r = np.dot(rotation_m, v)
+
+
+            rpos = [round(frame_width/2 + r[1]/graph_width * frame_width),
+                round(frame_height/2 - r[2]/graph_height * frame_height)]
+
+            output[rpos[1]][rpos[0]] = "#"
+
+
 
 
 
     #################### TEST ####################
 
-    # test vector to be projected
-    # v = np.array([1,3,5])
-
-    # u = np.dot(rotation_m, v)
-
     # test line:
-    # lb = -10
-    # ub = 10
-    # increment = 0.05
+    # lb = -15
+    # ub = 15
+    # increment = 0.02
 
     # # draw line (add line position data to output matrix)
     # for t in decimal_range(lb, ub, increment):
-        
-    #     # a line is just a series of points lol
-    #     # r = u*t
 
     #     v = np.array([t,6*m.cos(t),6*m.sin(t)])
     #     r = np.dot(rotation_m, v)
@@ -246,6 +256,7 @@ def render_frame(frame_height, frame_width, rotation_m, show_axes):
     ################### END TEST ###################
     
     # dump output to screen
+    print("\x1b[H")
     for k in range(0, frame_height):
         for j in range(0, frame_width):
             print(output[k][j], end="")
@@ -264,10 +275,14 @@ if __name__ == '__main__':
     # define Euler angles
     phi = -0.05
     thta = -0.3
-    psi = 0.5
+    psi = 0.3
+    # phi = 0
+    # thta = 0
+    # psi = 0
 
     propogate = True
     show_axes = True
+    step = 0.2
 
     if propogate == True:
         print("\n")
@@ -275,18 +290,18 @@ if __name__ == '__main__':
 
             psi += 0.1
             # phi += 0.1
-            # thta += 0.1
+            # thta += -0.1
 
             rotation_m = make_rotation(phi, thta, psi)
 
-            print("\x1b[H\n\n",render_frame(frame_height, frame_width, rotation_m, show_axes),"\x1b[H")
-            usleep(50000/2)
+            render_frame(frame_height, frame_width, rotation_m, step, show_axes)
+            usleep(50000)
 
 
     else:
         rotation_m = make_rotation(phi, thta, psi)
 
-        render_frame(frame_height, frame_width, rotation_m, show_axes)
+        render_frame(frame_height, frame_width, rotation_m, step, show_axes)
 
 
 
