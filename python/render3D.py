@@ -6,6 +6,7 @@ import time
 TODO:
 1. algebraically define a range for the value, t.
 2. render 3D surfaces
+3.  Add condition for t: if upos is outside of frame, don't add upos data to output
 '''
 
 def decimal_range(start, stop, increment):
@@ -134,14 +135,24 @@ def render_frame(frame_height, frame_width, rotation_m, show_axes):
     ####################### ################### ######################
 
     # Torus
-    R1 = 5
-    R2 = 2
+    R1 = 10
+    R2 = 3
 
     for theta in decimal_range(0, 2*np.pi, 0.02):
         for phi in decimal_range(0, 2*np.pi, 0.02):
-            pass
+            
+            x = (R1 + R2*m.cos(phi))*m.cos(theta)
+            y = (R1 + R2*m.cos(phi))*m.sin(theta)
+            z = R2*m.sin(phi)
+
+            v = np.array([x,y,z])
+            r = np.dot(rotation_m, v)
 
 
+            rpos = [round(frame_width/2 + r[1]/graph_width * frame_width),
+                round(frame_height/2 - r[2]/graph_height * frame_height)]
+
+            output[rpos[1]][rpos[0]] = "#"
 
 
 
@@ -153,29 +164,25 @@ def render_frame(frame_height, frame_width, rotation_m, show_axes):
 
     # u = np.dot(rotation_m, v)
 
-    # # project the vector onto the screen
-    # u = (np.dot(v, y_axis)*y_axis + np.dot(v, z_axis)*z_axis)
-
     # test line:
-    lb = -10
-    ub = 10
-    increment = 0.05
+    # lb = -10
+    # ub = 10
+    # increment = 0.05
 
-    # draw line (add line position data to output matrix)
-    for t in decimal_range(lb, ub, increment):
+    # # draw line (add line position data to output matrix)
+    # for t in decimal_range(lb, ub, increment):
         
-        # a line is just a series of points lol
-        # r = u*t
+    #     # a line is just a series of points lol
+    #     # r = u*t
 
-        v = np.array([t,6*m.cos(t),6*m.sin(t)])
-        r = np.dot(rotation_m, v)
+    #     v = np.array([t,6*m.cos(t),6*m.sin(t)])
+    #     r = np.dot(rotation_m, v)
 
-        # needs work
-        rpos = [round(frame_width/2 + r[1]/graph_width * frame_width),
-                round(frame_height/2 - r[2]/graph_height * frame_height)]
+    #     # needs work
+    #     rpos = [round(frame_width/2 + r[1]/graph_width * frame_width),
+    #             round(frame_height/2 - r[2]/graph_height * frame_height)]
 
-        # print(upos, t)
-        output[rpos[1]][rpos[0]] = "#"
+    #     output[rpos[1]][rpos[0]] = "#"
 
     ################### END TEST ###################
 
@@ -212,7 +219,7 @@ if __name__ == '__main__':
 
             psi += 0.1
             phi += 0.1
-            thta += 0.1
+            # thta += 0.1
 
             rotation_m = make_rotation(phi, thta, psi)
 
