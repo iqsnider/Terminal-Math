@@ -6,7 +6,10 @@ import time
 TODO:
 1. algebraically define a range for the value, t.
 2. render 3D surfaces
-3.  Add condition for t: if upos is outside of frame, don't add upos data to output
+3. Add condition for t: if upos is outside of frame, don't add upos data to output
+4. luminance calculation
+5. runtime optimizations (it's real bad, gamers)
+6. Clean code
 '''
 
 def decimal_range(start, stop, increment):
@@ -74,6 +77,7 @@ def render_frame(frame_height, frame_width, rotation_m, show_axes):
 
     # output matrix
     output = [ [' ']*frame_width for i in range(frame_height)]
+    
 
     # define elementary vectors without using Euler angles
     e_1 = np.array([0,1,0])
@@ -89,9 +93,9 @@ def render_frame(frame_height, frame_width, rotation_m, show_axes):
     #################### Make the coordinate axes ####################
     if show_axes == True:
 
-        xlb, xub, xinc = -19, 19, 0.02
-        ylb, yub, yinc = -19, 19, 0.02
-        zlb, zub, zinc = -18, 18, 0.02
+        xlb, xub, xinc = -19, 19, 0.2
+        ylb, yub, yinc = -19, 19, 0.2
+        zlb, zub, zinc = -18, 18, 0.2
 
         # x_axis
         for t in decimal_range(xlb, xub, xinc):
@@ -125,34 +129,89 @@ def render_frame(frame_height, frame_width, rotation_m, show_axes):
 
             # print(upos, t)
             output[rpos[1]][rpos[0]] = "z"
+        
+        # define origin as center of the screen
+        output[round(frame_height/2)][round(frame_width/2)] = "+"
 
     #################### ######################## ####################
 
     ####################### A Function to Graph ######################
 
+    '''The commented out stuff are functions that work, I just don't run them
+    all at the same time for obvious reasons.'''
 
-
-    ####################### ################### ######################
-
-    # Torus
-    R1 = 10
-    R2 = 3
-
-    for theta in decimal_range(0, 2*np.pi, 0.02):
-        for phi in decimal_range(0, 2*np.pi, 0.02):
+    # --------> cone
+    # for theta in decimal_range(0, 2*np.pi, 0.02):
+    #     for r in decimal_range(0, m.sqrt(9), 0.02):
             
-            x = (R1 + R2*m.cos(phi))*m.cos(theta)
-            y = (R1 + R2*m.cos(phi))*m.sin(theta)
-            z = R2*m.sin(phi)
+    #         x = r*m.cos(theta)
+    #         y = r*m.sin(theta)
+    #         z = m.sqrt(9 - r*r)
 
-            v = np.array([x,y,z])
-            r = np.dot(rotation_m, v)
+    #         v = np.array([x,y,z])
+    #         r = np.dot(rotation_m, v)
 
 
-            rpos = [round(frame_width/2 + r[1]/graph_width * frame_width),
-                round(frame_height/2 - r[2]/graph_height * frame_height)]
+    #         rpos = [round(frame_width/2 + r[1]/graph_width * frame_width),
+    #             round(frame_height/2 - r[2]/graph_height * frame_height)]
 
-            output[rpos[1]][rpos[0]] = "#"
+    #         output[rpos[1]][rpos[0]] = "#"
+
+    # -------> Torus
+    # R1 = 10
+    # R2 = 1
+
+    # for theta in decimal_range(0, 2*np.pi, 0.02):
+    #     for phi in decimal_range(0, 2*np.pi, 0.02):
+            
+    #         x = (R1 + R2*m.cos(phi))*m.cos(theta)
+    #         y = (R1 + R2*m.cos(phi))*m.sin(theta)
+    #         z = R2*m.sin(phi)
+
+    #         v = np.array([x,y,z])
+    #         r = np.dot(rotation_m, v)
+
+
+    #         rpos = [round(frame_width/2 + r[1]/graph_width * frame_width),
+    #             round(frame_height/2 - r[2]/graph_height * frame_height)]
+
+    #         output[rpos[1]][rpos[0]] = "#"
+
+
+    # --------> cube
+    # for t_x in decimal_range(-4, 4, 0.2):
+    #     for t_y in decimal_range(-4,4, 0.2):
+    #         for t_z in decimal_range(-4,4,0.2):
+            
+    #             x = t_x
+    #             y = t_y
+    #             z = t_z
+
+    #             v = np.array([x,y,z])
+    #             r = np.dot(rotation_m, v)
+
+
+    #             rpos = [round(frame_width/2 + r[1]/graph_width * frame_width),
+    #                 round(frame_height/2 - r[2]/graph_height * frame_height)]
+
+    #             output[rpos[1]][rpos[0]] = "#"
+
+    # --------->  plane
+    # for t_1 in decimal_range(-7, 7, 0.2):
+    #     for t_2 in decimal_range(-7,7, 0.2):
+            
+    #             x = 0
+    #             y = t_1
+    #             z = t_2
+
+    #             v = np.array([x,y,z])
+    #             r = np.dot(rotation_m, v)
+
+
+    #             rpos = [round(frame_width/2 + r[1]/graph_width * frame_width),
+    #                 round(frame_height/2 - r[2]/graph_height * frame_height)]
+
+    #             output[rpos[1]][rpos[0]] = "#"
 
 
 
@@ -185,9 +244,6 @@ def render_frame(frame_height, frame_width, rotation_m, show_axes):
     #     output[rpos[1]][rpos[0]] = "#"
 
     ################### END TEST ###################
-
-
-    if show_axes == True: output[round(frame_height/2)][round(frame_width/2)] = "+" # denotes origin
     
     # dump output to screen
     for k in range(0, frame_height):
@@ -211,20 +267,20 @@ if __name__ == '__main__':
     psi = 0.5
 
     propogate = True
-    show_axes = False
+    show_axes = True
 
     if propogate == True:
         print("\n")
         while True:
 
             psi += 0.1
-            phi += 0.1
+            # phi += 0.1
             # thta += 0.1
 
             rotation_m = make_rotation(phi, thta, psi)
 
             print("\x1b[H\n\n",render_frame(frame_height, frame_width, rotation_m, show_axes),"\x1b[H")
-            usleep(50000/(1))
+            usleep(50000/2)
 
 
     else:
