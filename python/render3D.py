@@ -14,6 +14,23 @@ TODO:
 8. Make a new github repo called 3D graphing calculator
 '''
 
+# define elementary vectors without using Euler angles
+e_1 = np.array([0,1,0])
+e_2 = np.array([0,0,1])
+nhat = np.array([1,0,0]) # vector normal to the screen
+
+
+# find luminance
+def luminance(r):
+    # L = np.sqrt(r.dot(r))
+    L = np.dot(r, nhat)
+
+    luminance_index = int(L/1.7)
+
+    return ".,-~:;=!*#$@"[luminance_index]
+
+
+
 def decimal_range(start, stop, increment):
     while start < stop: # and not math.isclose(start, stop): Py>3.5
         yield start
@@ -104,8 +121,8 @@ def render_frame(frame_height, frame_width, rotation_m, step, show_axes):
             r = x_axis*t
 
             # needs work
-            rpos = [round(frame_width/2 + r[1]/graph_width * frame_width),
-                    round(frame_height/2 - r[2]/graph_height * frame_height)]
+            rpos = [int(frame_width/2 + r[1]/graph_width * frame_width),
+                    int(frame_height/2 - r[2]/graph_height * frame_height)]
 
             # print(upos, t)
             output[rpos[1]][rpos[0]] = "x"
@@ -115,8 +132,8 @@ def render_frame(frame_height, frame_width, rotation_m, step, show_axes):
             r = y_axis*t
 
             # needs work
-            rpos = [round(frame_width/2 + r[1]/graph_width * frame_width),
-                    round(frame_height/2 - r[2]/graph_height * frame_height)]
+            rpos = [int(frame_width/2 + r[1]/graph_width * frame_width),
+                    int(frame_height/2 - r[2]/graph_height * frame_height)]
 
             # print(upos, t)
             output[rpos[1]][rpos[0]] = "y"
@@ -126,14 +143,16 @@ def render_frame(frame_height, frame_width, rotation_m, step, show_axes):
             r = z_axis*t
 
             # needs work
-            rpos = [round(frame_width/2 + r[1]/graph_width * frame_width),
-                    round(frame_height/2 - r[2]/graph_height * frame_height)]
+            rpos = [int(frame_width/2 + r[1]/graph_width * frame_width),
+                    int(frame_height/2 - r[2]/graph_height * frame_height)]
 
             # print(upos, t)
             output[rpos[1]][rpos[0]] = "z"
         
         # define origin as center of the screen
         output[round(frame_height/2)][round(frame_width/2)] = "+"
+
+
 
     #################### ######################## ####################
 
@@ -157,14 +176,14 @@ def render_frame(frame_height, frame_width, rotation_m, step, show_axes):
     #         rpos = [round(frame_width/2 + r[1]/graph_width * frame_width),
     #             round(frame_height/2 - r[2]/graph_height * frame_height)]
 
-    #         output[rpos[1]][rpos[0]] = "#"
+    #         output[rpos[1]][rpos[0]] = luminance(r)
 
     # -------> Torus
     # R1 = 10
-    # R2 = 6
+    # R2 = 5
 
     # for theta in decimal_range(0, 2*np.pi, step):
-    #     for phi in decimal_range(0, 2*np.pi, step + np.pi/6):
+    #     for phi in decimal_range(0, 2*np.pi, step):
             
     #         x = (R1 + R2*m.cos(phi))*m.cos(theta)
     #         y = (R1 + R2*m.cos(phi))*m.sin(theta)
@@ -173,10 +192,12 @@ def render_frame(frame_height, frame_width, rotation_m, step, show_axes):
     #         v = np.array([x,y,z])
     #         r = np.dot(rotation_m, v)
 
-    #         rpos = [round(frame_width/2 + r[1]/graph_width * frame_width),
-    #             round(frame_height/2 - r[2]/graph_height * frame_height)]
+    #         rpos = [int(frame_width/2 + r[1]/graph_width * frame_width),
+    #             int((frame_height/2 - r[2]/graph_height * frame_height))]
+    
+    #         # output[rpos[1]][rpos[0]] = "#"
+    #         output[rpos[1]][rpos[0]] = luminance(r)
 
-    #         output[rpos[1]][rpos[0]] = "#"
 
 
     # --------> cube
@@ -195,7 +216,7 @@ def render_frame(frame_height, frame_width, rotation_m, step, show_axes):
     #             rpos = [round(frame_width/2 + r[1]/graph_width * frame_width),
     #                 round(frame_height/2 - r[2]/graph_height * frame_height)]
 
-    #             output[rpos[1]][rpos[0]] = "#"
+    #             output[rpos[1]][rpos[0]] = luminance(r)
 
     # --------->  plane
     # for t_1 in decimal_range(-7, 7, 0.2):
@@ -212,23 +233,24 @@ def render_frame(frame_height, frame_width, rotation_m, step, show_axes):
     #             rpos = [round(frame_width/2 + r[1]/graph_width * frame_width),
     #                 round(frame_height/2 - r[2]/graph_height * frame_height)]
 
-    #             output[rpos[1]][rpos[0]] = "#"
+    #             output[rpos[1]][rpos[0]] = luminance(r)
 
-    # ------> just some function
-    for t_1 in decimal_range(-10, 10, 0.2):
-        for t_2 in decimal_range(-15, 15, 0.2):
-            x = t_1*t_1/3
-            y = t_2 
-            z = t_1
+    # ---------> a function
+    for t_1 in decimal_range(-12, 12, 0.2):
+        for t_2 in decimal_range(-12, 12, 0.2):
+            x = t_1
+            y = t_2
+            z = t_1*t_2/10
 
             v = np.array([x,y,z])
             r = np.dot(rotation_m, v)
 
 
-            rpos = [round(frame_width/2 + r[1]/graph_width * frame_width),
-                round(frame_height/2 - r[2]/graph_height * frame_height)]
+            rpos = [int(frame_width/2 + r[1]/graph_width * frame_width),
+                int(frame_height/2 - r[2]/graph_height * frame_height)]
+            
+            output[rpos[1]][rpos[0]] = luminance(r)
 
-            output[rpos[1]][rpos[0]] = "#"
 
 
 
@@ -251,12 +273,11 @@ def render_frame(frame_height, frame_width, rotation_m, step, show_axes):
     #     rpos = [round(frame_width/2 + r[1]/graph_width * frame_width),
     #             round(frame_height/2 - r[2]/graph_height * frame_height)]
 
-    #     output[rpos[1]][rpos[0]] = "#"
+    #     output[rpos[1]][rpos[0]] = '#'
 
     ################### END TEST ###################
     
-    # dump output to screen
-    print("\x1b[H")
+    # make frame
     for k in range(0, frame_height):
         for j in range(0, frame_width):
             print(output[k][j], end="")
@@ -282,20 +303,21 @@ if __name__ == '__main__':
 
     propogate = True
     show_axes = True
-    step = 0.2
+    step = 0.5
 
     if propogate == True:
-        print("\n")
         while True:
 
-            psi += 0.1
+            psi += 0.05
             # phi += 0.1
-            # thta += -0.1
-
+            # thta += -0.075
+            
             rotation_m = make_rotation(phi, thta, psi)
 
             render_frame(frame_height, frame_width, rotation_m, step, show_axes)
+            print("\x1b[41A")
             usleep(50000)
+            
 
 
     else:
