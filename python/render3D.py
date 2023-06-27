@@ -2,16 +2,6 @@ import numpy as np
 import math as m
 import time
 
-'''
-TODO:
-1. algebraically define a range for the value, t.
-4. luminance calculation
-5. runtime optimizations (it's real bad, gamers)
-6. Clean code
-7. Write a program for argument parsing a 3D function into a parametric system of equations for x, y, and z
-8. Make a new github repo called 3D graphing calculator
-'''
-
 # define elementary vectors without using Euler angles
 e_1 = np.array([0,1,0])
 e_2 = np.array([0,0,1])
@@ -41,35 +31,6 @@ def decimal_range(start, stop, increment):
 
 # makes a rotation matrix from given Euler angles
 def make_rotation(phi, thta, psi):
-
-    # #Euler rotation (convenient... sometimes.)
-    # # rotation about z-axis
-    # r_1 = np.array([[m.cos(phi), m.sin(phi), 0],
-    #                [-m.sin(phi), m.cos(phi), 0],
-    #                [0, 0, 1]])
-
-    # # rotation about new x-axis
-    # r_2 = np.array([[1, 0, 0],
-    #                [0, m.cos(thta), m.sin(thta)],
-    #                [0, -m.sin(thta), m.cos(thta)]])
-     
-    # # rotation about newest z-axis
-    # r_3 = np.array([[m.cos(psi), m.sin(psi), 0],
-    #                [-m.sin(psi), m.cos(psi), 0],
-    #                [0, 0, 1]])
-
-    # # TAIT-BRYAN rotation (easier to visualize lol)
-    # r_1 = np.array([[1,0,0],
-    #                 [0,m.cos(phi),-m.sin(phi)],
-    #                 [0,m.sin(phi),m.cos(phi)]])
-    
-    # r_2 = np.array([[m.cos(thta),0,m.sin(thta)],
-    #                 [0,1,0],
-    #                 [-m.sin(thta),0,m.cos(thta)]])
-    
-    # r_3 = np.array([[m.cos(psi),-m.sin(psi),0],
-    #                 [m.sin(psi),m.cos(psi),0],
-    #                 [0,0,1]])
     
     # consolidated rotation matrix
     cosphi = m.cos(phi)
@@ -155,10 +116,7 @@ def render_frame(frame_height, frame_width, rotation_m, step, show_axes):
 
     #################### Make the coordinate axes ####################
     if show_axes == True:
-
-        # xlb, xub, xinc = -20, 20, 0.2
-        # ylb, yub, yinc = -20, 20, 0.2
-        # zlb, zub, zinc = -20, 20, 0.2
+        
         alb, aub, ainc = -graph_height/2,graph_height/2, 0.2
 
         # x_axis
